@@ -1,76 +1,81 @@
-# AI Destekli Görev Yönetim Uygulaması PRD
+# Todo App - Ürün Gereksinim Dokümanı (PRD)
 
-## 1. 🎯 Yönetici Özeti
-AI teknolojilerini kullanan, bulut tabanlı bir görev yönetim platformu geliştirilecektir. Uygulama, kişisel ve takım verimliliğini artırmayı, yapay zeka ile akıllı önceliklendirme yapmayı ve işbirliğini kolaylaştırmayı hedeflemektedir.
+## 🎯 Yönetici Özeti
+AI destekli görev yönetim platformu, bireysel kullanıcılar ve ekipler için geliştirilecek bir SaaS çözümüdür. Yapay zeka teknolojilerini kullanarak görev oluşturma, önceliklendirme ve iş birliği süreçlerini otomatize ederek kullanıcı verimliliğini artırmayı hedeflemektedir.
 
-## 2. 👥 Hedef Kitle
+## 👥 Hedef Kitle
 - **Bireysel Kullanıcılar**
   - Yoğun çalışan profesyoneller
   - Öğrenciler
   - Girişimciler
-  - Serbest çalışanlar
+  - Proje yöneticileri
 - **Kurumsal Kullanıcılar**
   - KOBİ'ler
-  - Proje ekipleri
-  - Startup'lar
-  - Uzaktan çalışan takımlar
+  - Startup ekipleri
+  - Proje bazlı çalışan departmanlar
+  - Uzaktan çalışan ekipler
 
-## 3. ✨ Temel Özellikler
-### Kullanıcı Yönetimi
-- Email/şifre ve sosyal medya hesapları ile kayıt/giriş
-- Çok faktörlü kimlik doğrulama
-- Profil yönetimi ve kişiselleştirme
-- Rol bazlı yetkilendirme sistemi
+## ✨ Temel Özellikler
+1. **Görev Yönetimi**
+   - Doğal dil işleme ile görev oluşturma
+   - Otomatik deadline belirleme
+   - Görev kategorilendirme ve etiketleme
+   - Alt görevler oluşturabilme
+   - Öncelik seviyesi belirleme
 
-### Görev Yönetimi
-- Doğal dil işleme ile görev oluşturma
-- Drag & drop görev sıralaması
-- Etiketleme ve kategorilendirme
-- Alt görevler oluşturma
-- Tekrarlayan görevler tanımlama
-- Öncelik ve durum belirleme
+2. **AI Destekli Özellikler**
+   - Görev önceliklendirme algoritması
+   - Akıllı deadline önerileri
+   - Otomatik kategorizasyon
+   - İş yükü analizi ve optimizasyonu
 
-### AI Özellikleri
-- Otomatik deadline önerisi
-- Akıllı kategorilendirme
-- Önceliklendirme algoritması
-- İş yükü analizi
-- Performans tahminleme
+3. **İşbirliği Araçları**
+   - Gerçek zamanlı görev paylaşımı
+   - Ekip üyeleri arası görev atama
+   - Yorum ve bildirim sistemi
+   - Görev durumu takibi
 
-### İşbirliği Araçları
-- Görev atama ve delegasyon
-- Gerçek zamanlı bildirimler
-- Yorum ve tartışma sistemi
-- Dosya paylaşımı
-- Aktivite geçmişi
+4. **Raporlama ve Analitik**
+   - Görev tamamlama istatistikleri
+   - Performans dashboard'ları
+   - Zaman takibi
+   - İlerleme raporları
 
-## 4. 💰 Gelir Modeli
-- **Ücretsiz Plan**
-  - 5 proje
-  - Temel görev yönetimi
-  - 100MB depolama
-- **Pro Plan (Aylık 9.99₺)**
-  - Sınırsız proje
-  - AI özellikleri
-  - 5GB depolama
-- **Takım Planı (Kullanıcı başı aylık 19.99₺)**
-  - Tüm Pro özellikleri
-  - Gelişmiş işbirliği araçları
-  - 20GB depolama
-  - Öncelikli destek
+## 💰 Gelir Modeli
+1. **Freemium Model**
+   - Temel özellikler ücretsiz
+   - Kişisel kullanım: 29₺/ay
+   - Profesyonel kullanım: 89₺/ay
+   - Kurumsal paket: 299₺/ay
 
-## 5. 🚀 MVP Kapsamı
-- Temel kullanıcı yönetimi
-- Görev oluşturma ve düzenleme
-- Basit AI kategorizasyonu
-- Liste görünümü
-- Temel bildirim sistemi
-- Email entegrasyonu
-- Web uygulaması (mobil responsive)
+2. **Özel Çözümler**
+   - Enterprise özelleştirme
+   - Özel API erişimi
+   - Dedicated destek
+   - Özel fiyatlandırma
 
-## 6. 📝 Kullanıcı Hikayeleri
-- Bir bireysel kullanıcı olarak, sesli komutla görev ekleyebilmek istiyorum, böylece zamanımı daha verimli kullanabilirim.
-- Bir takım lideri olarak, görevleri ekip üyelerine atayabilmek istiyorum, böylece iş dağılımını organize edebilirim.
-- Bir proje yöneticisi olarak, görev durumlarını gerçek zamanlı takip edebilmek istiyorum, böylece projenin ilerleyişini kontrol edebilirim.
-- Bir ekip üyesi olarak, görevler üzerinde yorum yapabilmek istiyorum, böylece ekip içi iletişimi artırabilirim.
-- Bir kullanıcı olarak, görevlerimi önceliklendirebilmek istiyorum, böylece önemli işlere odaklanabilirim.
+## 🚀 MVP Kapsamı
+1. **Öncelikli Özellikler**
+   - Basit görev oluşturma ve düzenleme
+   - Temel AI kategorizasyon
+   - Deadline yönetimi
+   - Basit paylaşım özellikleri
+   - Kullanıcı kimlik doğrulama
+   - Temel dashboard
+
+2. **MVP Dışında Tutulacaklar**
+   - Gelişmiş raporlama
+   - Özelleştirilebilir workflow'lar
+   - API entegrasyonları
+   - Gelişmiş AI özellikleri
+
+## 📝 Kullanıcı Hikayeleri
+1. "Bir profesyonel olarak, görevlerimi doğal dille hızlıca oluşturmak istiyorum, böylece zaman kaybetmeden planlama yapabilirim."
+
+2. "Bir ekip lideri olarak, görevleri ekip üyelerine atayabilmek istiyorum, böylece iş dağılımını etkin şekilde yönetebilirim."
+
+3. "Bir öğrenci olarak, görevlerimi önceliklendirebilmek istiyorum, böylece zamanımı daha iyi yönetebilirim."
+
+4. "Bir proje yöneticisi olarak, ekibimin performansını takip edebilmek istiyorum, böylece darboğazları tespit edebilirim."
+
+5. "Bir uzaktan çalışan olarak, ekip arkadaşlarımla görev paylaşımı yapabilmek istiyorum, böylece koordinasyonu sağlayabilirim."
