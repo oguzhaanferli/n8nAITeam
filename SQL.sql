@@ -1,34 +1,45 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TYPE todoapp_task_status AS ENUM ('not_started', 'in_progress', 'completed', 'cancelled');
-CREATE TYPE todoapp_priority_level AS ENUM ('high', 'medium', 'low');
+CREATE TYPE todoapp_task_status_type AS ENUM ('Yapılacak', 'Devam Ediyor', 'Tamamlandı', 'İptal Edildi');
+CREATE TYPE todoapp_priority_type AS ENUM ('Yüksek', 'Orta', 'Düşük');
+CREATE TYPE todoapp_recurrence_pattern AS ENUM ('günlük', 'haftalık', 'aylık', 'yıllık');
+
+CREATE TABLE IF NOT EXISTS todoapp_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    full_name TEXT,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
 
 CREATE TABLE IF NOT EXISTS todoapp_categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS todoapp_task_lists (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    is_public BOOLEAN NOT NULL DEFAULT false,
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT,
+    is_public BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS todoapp_tasks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    title VARCHAR(255) NOT NULL,
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    list_id UUID REFERENCES todoapp_task_lists(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
     description TEXT,
     due_date TIMESTAMPTZ,
-    priority todoapp_priority_level,
-    status todoapp_task_status DEFAULT 'not_started',
-    list_id UUID REFERENCES todoapp_task_lists(id) ON DELETE CASCADE,
-    assigned_to UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    created_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    status todoapp_task_status_type DEFAULT 'Yapılacak',
+    priority todoapp_priority_type,
+    recurrence_pattern todoapp_recurrence_pattern,
+    recurrence_until TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -39,26 +50,29 @@ CREATE TABLE IF NOT EXISTS todoapp_task_categories (
     PRIMARY KEY (task_id, category_id)
 );
 
-CREATE TABLE IF NOT EXISTS todoapp_task_dependencies (
-    parent_task_id UUID NOT NULL REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    child_task_id UUID NOT NULL REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    PRIMARY KEY (parent_task_id, child_task_id)
+CREATE TABLE IF NOT EXISTS todoapp_task_assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    task_id UUID NOT NULL REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
+    assigned_to UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now(),
+    UNIQUE(task_id, assigned_to)
 );
 
 CREATE TABLE IF NOT EXISTS todoapp_comments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    content TEXT NOT NULL,
     task_id UUID NOT NULL REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS todoapp_task_list_shares (
-    list_id UUID NOT NULL REFERENCES todoapp_task_lists(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    permission_level VARCHAR(50) NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    task_list_id UUID NOT NULL REFERENCES todoapp_task_lists(id) ON DELETE CASCADE,
+    shared_with UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now(),
-    PRIMARY KEY (list_id, user_id)
+    UNIQUE(task_list_id, shared_with)
 );
