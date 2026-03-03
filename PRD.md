@@ -1,79 +1,81 @@
 
-```markdown
 # SaaS Todo Uygulaması - Ürün Gereksinim Dokümanı (PRD)
 
-## 🎯 Yönetici Özeti (Executive Summary)
+## 1. 🎯 Yönetici Özeti
 
-Bu doküman, kişisel ve ekip üretkenliğini artırmak üzere tasarlanmış, yapay zeka destekli bir SaaS (Software as a Service) todo uygulaması geliştirilmesini tanımlamaktadır. Uygulama, görev yönetimini basitleştirecek, etkili önceliklendirme yapacak ve kusursuz işbirliği imkanı sunacaktır. Amaç, kullanıcıların görevlerini daha verimli bir şekilde tamamlamalarını sağlayarak zaman yönetimi becerilerini geliştirmelerine yardımcı olmaktır.
+Bu doküman, kişisel ve ekip üretkenliğini artırmak üzere tasarlanmış, yapay zeka destekli bir SaaS tabanlı yapılacaklar listesi uygulamasının geliştirilmesini detaylandırmaktadır. Uygulama, doğal dil işleme, akıllı önceliklendirme ve kusursuz işbirliği özellikleri ile görev yönetimini basitleştirmeyi hedeflemektedir. Bu PRD, ürün geliştirme sürecinde yazılım ekibi, tasarımcılar, pazarlamacılar ve paydaşlar için yol gösterici bir kaynak olarak hizmet edecektir.
 
-## 👥 Hedef Kitle (Target Audience)
+## 2. 👥 Hedef Kitle
 
-*   **Bireysel Kullanıcılar:** Yoğun çalışan profesyoneller, öğrenciler ve iş kuranlar; günlük görevlerini düzenlemek ve zaman yönetimi becerilerini geliştirmek isteyenler.
-*   **Ekip Kullanıcıları:** Görev atama, ilerleme takibi ve proje yönetimi için işbirliğine dayalı bir platforma ihtiyaç duyan küçük ve orta ölçekli işletmeler.
+*   **Bireyler:** Yoğun profesyoneller, öğrenciler ve zaman yönetimini iyileştirmek isteyen girişimciler. Günlük görevleri düzenlemeye ve verimliliği artırmaya ihtiyaç duyan kullanıcılar.
+*   **Takımlar:** Görev dağıtımı, ilerleme takibi ve proje yönetimi için işbirliği platformuna ihtiyaç duyan küçük ve orta ölçekli işletmeler. Özellikle uzaktan çalışan ve koordinasyon ihtiyacı yüksek olan takımlar.
 
-## ✨ Temel Özellikler (Feature List)
+## 3. ✨ Temel Özellikler (Feature List)
 
-### 1. Akıllı Görev Oluşturma (Smart Task Creation)
+*   **Akıllı Görev Oluşturma:**
+    *   **Doğal Dil İşleme (NLP):** Kullanıcının doğal dilde girdiği metni analiz ederek görev başlığı, açıklaması ve son tarih bilgilerini otomatik olarak çıkarabilme. Örneğin, "Yarın sabah 9'da Ayşe ile toplantı yap" ifadesi, başlık "Ayşe ile Toplantı", son tarih "Yarın 09:00" olarak otomatik oluşturulmalıdır.
+    *   **Kategori Önerisi:** Görev başlığına göre otomatik olarak ilgili kategori önerileri sunulması. (Örn: "Rapor Hazırla" -> "İş", "Proje", "Finans")
+    *   **Öncelik Düzeyi Tahmini:** NLP ile görev içeriğinden öncelik düzeyini tahmin etme ve kullanıcıya onaylatma (Yüksek, Orta, Düşük).
+    *   **Tekrarlayan Görevler:** Belirli aralıklarla tekrarlayan görevlerin (günlük, haftalık, aylık) kolayca oluşturulabilmesi.
+*   **Akıllı Önceliklendirme:**
+    *   **Bağımlılık Analizi:** Görevler arasındaki bağımlılıkları (engellenen görevler, sonraki adımlar) belirleme ve önceliklendirmeyi buna göre ayarlama.
+    *   **Son Tarih Bazlı Önceliklendirme:** Görevlerin son tarihine göre otomatik olarak önceliklendirme. En yakın tarihliler en üstte.
+    *   **Kullanıcı Tercihlerine Göre Uyarlama:** Kullanıcının geçmiş görev tamamlama alışkanlıklarına, yoğun çalışma saatlerine ve kişisel tercihlerine göre önceliklendirme algoritmasını optimize etme.
+    *   **Önceliklendirme Algoritması:** Bir puanlama sistemi ile görevlere öncelik ataması (Örn: Son tarih yaklaştıkça puan artar, bağımlılık arttıkça puan artar, kullanıcı tercihlerine göre puan artar/azalır).
+*   **İşbirliği Özellikleri:**
+    *   **Paylaşımlı Görev Listeleri:** Kullanıcıların görev listelerini belirli kullanıcılar veya ekiplerle paylaşabilmesi.
+    *   **Gerçek Zamanlı Güncellemeler:** Görevlerde yapılan değişikliklerin (durum, son tarih, açıklama) paylaşılan listedeki tüm kullanıcılara anında bildirilmesi. (WebSockets/Server-Sent Events ile)
+    *   **Görev Ataması:** Kullanıcıların görevleri diğer kullanıcılarına atayabilmesi.
+    *   **Açıklama ve Yorumlar:** Görevlere yorum ekleyerek iletişim kurabilme.
+    *   **Bildirimler:** Görev ataması, yorumlar ve güncellemeler hakkında e-posta ve uygulama içi bildirimler.
+*   **İlerleme Takibi ve Raporlama:**
+    *   **Görev Durumu:** Görevlerin durumunu (Yapılacak, Devam Ediyor, Tamamlandı, İptal Edildi) belirleme ve güncelleyebilme.
+    *   **İlerleme Çubuğu:** Görevlerdeki ilerlemeyi görsel olarak gösteren çubuklar.
+    *   **Dashboard:** Bireysel ve ekip performansını gösteren görsel panolar. (Tamamlanan görev sayısı, geciken görevler, görev önceliklendirme dağılımı)
+    *   **Raporlama:** Belirli bir zaman aralığı için görev tamamlama oranları, ortalama görev süresi gibi metriklerin raporlanması. (CSV/PDF olarak dışa aktarma)
+*   **Teknik Gereksinimler:**
+    *   **Veritabanı:** Verileri güvenli ve ölçeklenebilir bir şekilde saklamak için PostgreSQL veya MySQL kullanılacak.
+    *   **API:** RESTful API mimarisi kullanılacak.
+    *   **Güvenlik:** Kullanıcı verilerini korumak için HTTPS, şifreleme ve düzenli güvenlik testleri uygulanacak.
+    *   **Platform:** Web uygulaması (React, Angular veya Vue.js ile) ve mobil uygulamalar (React Native veya Flutter ile).
 
-*   **Doğal Dil İşleme (NLP) Motoru:** Kullanıcının serbest metin girdilerini (örneğin: "Yarın sabah 9'da müşteri toplantısı için sunumu hazırla") yapılandırılmış görevlere dönüştürmelidir.
-*   **Varlık Tanıma:** Görev metninden tarih, saat, kişi, proje vb. varlıkları otomatik olarak çıkarmalıdır.
-*   **Otomatik Son Tarih Atama:** Görev açıklamasında belirtilen tarihe göre otomatik olarak son tarih atanmalıdır. Tarih belirtilmemişse, kullanıcıya son tarih belirleme sorusu sorulmalıdır.
-*   **Kategori/Etiket Önerisi:** NLP motoru, görev içeriğine göre otomatik olarak kategori/etiket önermelidir. Kullanıcı bu önerileri kabul edebilir, reddedebilir veya kendisi yeni etiketler ekleyebilir.
-*   **Görev Önceliği Ayarı (Başlangıç Seviyesi):**  Görevi Oluştururken öncelik seviyesi seçme imkanı (Yüksek, Orta, Düşük).
-*   **Teknik Gereksinimler:** Python, TensorFlow/PyTorch (NLP için), RESTful API.
+## 4. 💰 Gelir Modeli
 
-### 2. Akıllı Önceliklendirme (Intelligent Prioritization)
+*   **Freemium:** Temel özellikler (örn. sınırlı sayıda görev, temel önceliklendirme) ücretsiz olarak sunulacak.
+*   **Abonelik Tabanlı:** Premium özelliklere (örn. gelişmiş yapay zeka özellikleri, sınırsız görevler, ekip işbirliği, özel temalar) erişim için aylık veya yıllık abonelik seçenekleri sunulacak.
+    *   **Bireysel Plan:** Temel premium özellikler.
+    *   **Ekip Planı:** Ekip işbirliği özellikleri ve daha fazla depolama alanı.
+    *   **Business Plan:** Gelişmiş raporlama ve yönetici kontrolleri.
+*   **Kurumsal Çözümler:** Büyük kuruluşlar için özelleştirilmiş çözümler ve özel destek sunulacak.
 
-*   **Görev Bağımlılıkları:** Kullanıcıların görevler arasında bağımlılıklar (öncelik sırası) belirleyebilmesi (örneğin, "Görev B, Görev A tamamlandıktan sonra başlayabilir").
-*   **Öncelik Algoritması:** Görevlerin son tarihlerini, bağımlılıklarını ve kullanıcı tercihlerini (gelecek özelliklerde öğrenilen davranışlar) göz önünde bulundurarak bir öncelik sıralaması oluşturmalıdır.
-*   **Dinamik Sıralama:** Görevler tamamlandıkça veya yeni görevler eklendikçe öncelik sıralaması otomatik olarak güncellenmelidir.
-*   **Kullanıcı Ağırlıklandırması:** Kullanıcıların farklı görevlere farklı ağırlıklar verme imkanı (gelecek özelliklerde).
-*   **Teknik Gereksinimler:**  Veritabanı (PostgreSQL/MongoDB), Algoritma geliştirme (Python), RESTful API.
+## 5. 🚀 MVP Kapsamı
 
-### 3. İşbirliği Özellikleri (Collaborative Features)
+MVP, aşağıdaki temel fonksiyonlara odaklanacaktır:
 
-*   **Paylaşımlı Görev Listeleri:** Kullanıcıların görev listelerini diğer kullanıcılarla paylaşabilmesi.
-*   **Gerçek Zamanlı Güncellemeler:** Görev listesindeki değişikliklerin (yeni görev ekleme, görev atama, görev durumu güncelleme) tüm paylaşılan kullanıcılar tarafından gerçek zamanlı olarak görülebilmesi (WebSockets).
-*   **Görev Ataması:** Kullanıcıların görevleri diğer kullanıcılara atayabilmesi.
-*   **Yorumlar ve Tartışmalar:** Görevler altında yorum yapabilme ve tartışma başlatabilme imkanı.
-*   **Teknik Gereksinimler:**  WebSockets, RESTful API, Kullanıcı Yönetimi Sistemi.
+*   Akıllı görev oluşturma (temel kategori önerileri ile).
+*   Son tarihe göre görev önceliklendirme.
+*   Tek kullanıcılı görev yönetimi (temel takvim entegrasyonu ile - Google Calendar/Outlook).
+*   Herkese açık görev listeleri oluşturma ve paylaşma imkanı (işbirliği için).
+*   Güvenli kullanıcı kimlik doğrulaması (E-posta/Şifre, Google/Facebook Girişi) ve veri şifreleme.
+*   Temel Görev Durumları (Yapılacak, Devam Ediyor, Tamamlandı).
 
-### 4. İlerleme Takibi ve Raporlama (Progress Tracking & Reporting)
+**MVP'de Olmayacaklar:**
 
-*   **Görsel Gösterge Paneli (Dashboard):** Toplam görev sayısı, tamamlanan görev sayısı, bekleyen görev sayısı, geciken görev sayısı gibi temel metrikleri gösteren bir gösterge paneli.
-*   **Görev Durumu Görselleştirmesi:** Görevlerin durumunu (başlamadı, devam ediyor, tamamlandı, iptal edildi) görsel olarak gösteren grafikler ve tablolar.
-*   **Ekip Performans Raporları:** Ekip üyelerinin tamamladığı görev sayısı, ortalama görev tamamlama süresi gibi metrikleri gösteren raporlar.
-*   **Teknik Gereksinimler:**  Veritabanı, Grafik kütüphaneleri (Chart.js, D3.js), Raporlama motoru.
+*   Gelişmiş Yapay Zeka (Özel öncelik algoritmaları, bağımlılık analizi)
+*   Ekip İşbirliği Özellikleri (Görev ataması, yorumlar, bildirimler)
+*   İlerleme Takibi ve Raporlama (Dashboard, raporlar)
+*   Mobil Uygulamalar. (Sadece Web uygulaması)
+*   Özel temalar ve özelleştirme seçenekleri.
 
-## 💰 Gelir Modeli (Revenue Model)
+## 6. 📝 Kullanıcı Hikayeleri
 
-*   **Freemium:** Temel özellikler (akıllı görev oluşturma, temel önceliklendirme, sınırlı sayıda paylaşımlı liste) ücretsiz olarak sunulur.
-*   **Premium:**
-    *   **Bireysel Premium:** Gelişmiş AI fonksiyonları (daha detaylı önceliklendirme, otomatik etiket önerileri), artırılmış depolama alanı, gelişmiş takvim entegrasyonu. (Aylık/Yıllık)
-    *   **Ekip Premium:** Bireysel Premium özelliklerinin yanı sıra, sınırsız sayıda ekip üyesi, gelişmiş ekip raporları, özel markalama seçenekleri. (Kullanıcı Sayısına Göre Fiyatlandırma – Aylık/Yıllık)
-*   **Kurumsal:** Büyük organizasyonlar için özelleştirilmiş çözümler ve özel destek. (Fiyatlandırma, özel gereksinimlere göre belirlenir.)
-
-## 🚀 MVP Kapsamı (MVP Scope)
-
-MVP'nin amacı, temel işlevselliği kanıtlamak ve erken kullanıcı geri bildirimi almaktır.
-
-*   **Akıllı Görev Oluşturma (Temel Seviye):**  Temel NLP desteğiyle görev oluşturma, otomatik son tarih atama, temel kategori belirleme.
-*   **Görev Önceliklendirmesi (Son Tarihe Göre):** Görevleri yalnızca son tarihe göre sıralama.
-*   **Tek Kullanıcılı Görev Yönetimi:**  Tek kullanıcının görevlerini oluşturup yönetebileceği, tamamlayabileceği bir arayüz.
-*   **Temel Takvim Entegrasyonu:** Görevlerin temel bir takvim uygulamasına (örneğin Google Takvim) aktarılabilmesi. (Sadece okuma, görevden takvime)
-*   **Paylaşımlı Görev Listeleri (Kamuya Açık):**  Herkese açık olarak paylaşılabilecek temel görev listeleri. (Tamamen kamuya açık, gizlilik kontrolü yok)
-*   **Güvenli Kullanıcı Kimlik Doğrulaması ve Veri Şifrelemesi:** Kullanıcı verilerinin güvenliği için temel kimlik doğrulama (e-posta/şifre) ve veri şifreleme.
-*   **Platform:** Web Arayüzü (Responsive Tasarım)
-
-## 📝 Kullanıcı Hikayeleri (User Stories)
-
-*   Bir **busy professional** olarak, görevimi doğal dilde yazarak ekleyebildiğimde, görevleri manuel olarak girmeye harcadığım zamanı azaltabilirim.
-*   Bir **student** olarak, ödevlerime son tarih belirleyebildiğimde, önemli teslim tarihlerini kaçırmama engel olabilirim.
-*   Bir **entrepreneur** olarak, görevlerime kategori ekleyebildiğimde, projelerimi organize tutabilirim.
-*   Bir **bireysel kullanıcı** olarak, görevlerime öncelik verebildiğimde, en önemli görevlere odaklanabilirim.
-*   Bir **ekip üyesi** olarak, görev listelerini diğer ekip üyeleriyle paylaşabildiğimde, işbirliği yapabilir ve görev paylaşımını kolaylaştırabilirim.
-*   Bir **proje yöneticisi** olarak, ekibimin ilerlemesini görsel olarak takip edebildiğimde, darboğazları belirleyebilir ve projeyi başarıyla tamamlayabilirim.
-*   Bir **kullanıcı** olarak, güvenli bir şekilde giriş yapabildiğimde, kişisel verilerimin korunacağından emin olabilirim.
-*   Bir **kullanıcı** olarak, görevlerimi takvimimle senkronize edebildiğimde, tüm planlarımı tek bir yerde görebilirim.
-*   Bir **kullanıcı** olarak, herkese açık bir görev listesi oluşturabildiğimde, belirli projelerde toplulukla işbirliği yapabilirim.
-```
+*   **Bir Bireysel Kullanıcı olarak**, görevlerimi hızlıca oluşturmak istiyorum, böylece zamanımı daha etkili kullanabilirim.
+*   **Bir Bireysel Kullanıcı olarak**, görevlerime son tarihler atayabilmek istiyorum, böylece önceliklerimi daha iyi belirleyebilirim.
+*   **Bir Bireysel Kullanıcı olarak**, takvimimle senkronize edebilmek istiyorum, böylece görevlerimi günlüğümle birlikte görebilirim.
+*   **Bir Takım Lideri olarak**, görevleri ekip üyelerine atayabilmek istiyorum, böylece iş yükünü dağıtabilir ve takip edebilirim.
+*   **Bir Takım Üyesi olarak**, bana atanan görevleri görebilmek istiyorum, böylece sorumluluklarımın farkında olabilirim.
+*   **Bir Takım Üyesi olarak**, görevlerdeki güncellemeleri anında görmek istiyorum, böylece işbirliği içinde kalabilirim.
+*   **Bir Yönetici olarak**, ekibimin ilerlemesini takip etmek istiyorum, böylece projelerin zamanında tamamlanmasını sağlayabilirim.
+*   **Bir Bireysel Kullanıcı olarak**, tamamladığım görevleri görmek istiyorum, böylece motivasyonumu artırabilirim.
+*   **Bir Bireysel Kullanıcı olarak**, genel bir bakış elde etmek için görevlerimi kategorilere ayırabilmek istiyorum, böylece daha organize olabilirim.
+*   **Bir Takım Lideri olarak**, bir göreve yorum ekleyebilmek istiyorum, böylece ekibimle iletişim kurabilir ve netlik sağlayabilirim.
