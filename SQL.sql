@@ -1,125 +1,63 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE IF NOT EXISTS todoapp_roles (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE IF NOT EXISTS todoapp_users (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    auth_user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    username VARCHAR(100),
-    role_id UUID REFERENCES todoapp_roles(id) ON DELETE SET NULL,
-    subscription_status VARCHAR(20),
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE IF NOT EXISTS todoapp_teams (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    created_by UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE IF NOT EXISTS todoapp_team_members (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    team_id UUID REFERENCES todoapp_teams(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    role_id UUID REFERENCES todoapp_roles(id) ON DELETE SET NULL,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
-    UNIQUE(team_id, user_id)
-);
+CREATE TYPE todoapp_priority_level AS ENUM ('high', 'medium', 'low');
+CREATE TYPE todoapp_recurrence_pattern AS ENUM ('daily', 'weekly', 'monthly');
 
 CREATE TABLE IF NOT EXISTS todoapp_categories (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    team_id UUID REFERENCES todoapp_teams(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
-    CHECK ((user_id IS NOT NULL AND team_id IS NULL) OR (user_id IS NULL AND team_id IS NOT NULL))
+    updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS todoapp_tasks (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
     description TEXT,
     due_date TIMESTAMPTZ,
-    completed BOOLEAN DEFAULT false,
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    team_id UUID REFERENCES todoapp_teams(id) ON DELETE CASCADE,
-    category_id UUID REFERENCES todoapp_categories(id) ON DELETE SET NULL,
+    priority todoapp_priority_level,
+    is_completed BOOLEAN DEFAULT false,
+    is_public BOOLEAN DEFAULT false,
     parent_task_id UUID REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    assigned_to UUID REFERENCES todoapp_users(id) ON DELETE SET NULL,
-    priority INT DEFAULT 0,
-    recurrence_pattern VARCHAR(100),
-    position FLOAT DEFAULT 0,
+    calendar_event_id TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS todoapp_tags (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    color VARCHAR(7),
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    team_id UUID REFERENCES todoapp_teams(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE IF NOT EXISTS todoapp_task_tags (
+CREATE TABLE IF NOT EXISTS todoapp_subtasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     task_id UUID REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    tag_id UUID REFERENCES todoapp_tags(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    PRIMARY KEY (task_id, tag_id)
-);
-
-CREATE TABLE IF NOT EXISTS todoapp_comments (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    content TEXT NOT NULL,
-    task_id UUID REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    is_completed BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS todoapp_notifications (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    type VARCHAR(50) NOT NULL,
-    content TEXT NOT NULL,
-    recipient_user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS todoapp_recurring_tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     task_id UUID REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
-    comment_id UUID REFERENCES todoapp_comments(id) ON DELETE CASCADE,
-    read BOOLEAN DEFAULT false,
+    pattern todoapp_recurrence_pattern NOT NULL,
+    interval INT DEFAULT 1,
+    next_due_date TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS todoapp_subscriptions (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id UUID REFERENCES todoapp_users(id) ON DELETE CASCADE,
-    team_id UUID REFERENCES todoapp_teams(id) ON DELETE CASCADE,
-    plan_type VARCHAR(50) NOT NULL,
-    valid_until TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
-    CHECK ((user_id IS NOT NULL AND team_id IS NULL) OR (user_id IS NULL AND team_id IS NOT NULL))
+CREATE TABLE IF NOT EXISTS todoapp_task_categories (
+    task_id UUID REFERENCES todoapp_tasks(id) ON DELETE CASCADE,
+    category_id UUID REFERENCES todoapp_categories(id) ON DELETE CASCADE,
+    PRIMARY KEY (task_id, category_id)
 );
 
-CREATE OR REPLACE FUNCTION update_modified_column() 
+CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = now();
-    RETURN NEW; 
+    RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 DO $$
 DECLARE
@@ -127,13 +65,12 @@ DECLARE
 BEGIN
     FOR t IN 
         SELECT table_name FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name LIKE 'todoapp_%'
+        WHERE table_name LIKE 'todoapp_%'
     LOOP
-        EXECUTE format('CREATE OR REPLACE TRIGGER update_%s_modtime
-                        BEFORE UPDATE ON %I
-                        FOR EACH ROW EXECUTE FUNCTION update_modified_column()',
-                        t, t);
+        EXECUTE format('CREATE TRIGGER update_%s_updated_at
+            BEFORE UPDATE ON %I
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at()',
+            t, t);
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
