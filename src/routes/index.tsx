@@ -1,24 +1,29 @@
 import { Route, Routes } from 'react-router-dom'
-import Login from '../pages/Login'
-import Register from '../pages/Register'
-import Dashboard from '../pages/Dashboard'
-import Tasks from '../pages/Tasks'
-import TaskDetail from '../pages/TaskDetail'
-import TaskForm from '../pages/TaskForm'
-import Settings from '../pages/Settings'
+import Layout from '@/components/Layout'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
+import Dashboard from '@/pages/Dashboard'
+import Tasks from '@/pages/Tasks'
+import TaskDetail from '@/pages/TaskDetail'
+import TaskForm from '@/pages/TaskForm'
+import Settings from '@/pages/Settings'
+import PrivateRoute from '@/components/PrivateRoute'
 
-const routes = (
+export const AppRoutes = (
   <Routes>
-    <Route key="login" path="/login" element={<Login />} />
-    <Route key="register" path="/register" element={<Register />} />
-    <Route key="dashboard" path="/" element={<Dashboard />} />
-    <Route key="tasks" path="/tasks" element={<Tasks />} />
-    <Route key="task-detail" path="/tasks/:id" element={<TaskDetail />} />
-    <Route key="task-create" path="/tasks/create" element={<TaskForm />} />
-    <Route key="task-edit" path="/tasks/:id/edit" element={<TaskForm />} />
-    <Route key="settings" path="/settings" element={<Settings />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route element={<Layout />}>
+      <Route element={<PrivateRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/tasks/new" element={<TaskForm />} />
+        <Route path="/tasks/:id" element={<TaskDetail />} />
+        <Route path="/tasks/:id/edit" element={<TaskForm />} />
+        <Route path="/settings" element={<Settings />} />
+      </Route>
+    </Route>
+    <Route path="*" element={<Login />} />
   </Routes>
 )
-
-export default routes
 ```
