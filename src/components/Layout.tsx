@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Navbar from './Navbar';
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="app-layout">
       <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-6">
-        {children}
-      </main>
+      <main className="container">{children}</main>
     </div>
   );
 };
