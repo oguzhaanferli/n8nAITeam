@@ -1,26 +1,29 @@
 import { create } from 'zustand'
-import { Task, Category, List } from './types'
+import { User, Task } from './types'
 
 interface AppState {
+  user: User | null
   tasks: Task[]
-  categories: Category[]
-  lists: List[]
+  setUser: (user: User | null) => void
   addTask: (task: Task) => void
-  updateTask: (task: Task) => void
-  deleteTask: (id: string) => void
+  updateTask: (taskId: string, updatedTask: Partial<Task>) => void
+  removeTask: (taskId: string) => void
 }
 
-export const useAppStore = create<AppState>((set) => ({
+const useAppStore = create<AppState>((set) => ({
+  user: null,
   tasks: [],
-  categories: [],
-  lists: [],
-  addTask: (task: Task) => set((state) => ({ tasks: [...state.tasks, task] })),
-  updateTask: (updatedTask: Task) => set((state) => ({
-    tasks: state.tasks.map((task) => 
-      task.id === updatedTask.id ? updatedTask : task
+  setUser: (user) => set({ user }),
+  addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
+  updateTask: (taskId, updatedTask) => set((state) => ({
+    tasks: state.tasks.map((task) =>
+      task.id === taskId ? { ...task, ...updatedTask } : task
     )
   })),
-  deleteTask: (id: string) => set((state) => ({
-    tasks: state.tasks.filter((task) => task.id !== id)
+  removeTask: (taskId) => set((state) => ({
+    tasks: state.tasks.filter((task) => task.id !== taskId)
   }))
 }))
+
+export default useAppStore
+```
