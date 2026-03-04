@@ -1,29 +1,12 @@
-import { create } from 'zustand'
-import { User, Task } from './types'
+import { create } from 'zustand';
+import { AuthSession } from './types';
 
-interface AppState {
-  user: User | null
-  tasks: Task[]
-  setUser: (user: User | null) => void
-  addTask: (task: Task) => void
-  updateTask: (taskId: string, updatedTask: Partial<Task>) => void
-  removeTask: (taskId: string) => void
-}
+type AuthState = AuthSession & {
+  setSession: (session: AuthSession | null) => void;
+};
 
-const useAppStore = create<AppState>((set) => ({
-  user: null,
-  tasks: [],
-  setUser: (user) => set({ user }),
-  addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
-  updateTask: (taskId, updatedTask) => set((state) => ({
-    tasks: state.tasks.map((task) =>
-      task.id === taskId ? { ...task, ...updatedTask } : task
-    )
-  })),
-  removeTask: (taskId) => set((state) => ({
-    tasks: state.tasks.filter((task) => task.id !== taskId)
-  }))
-}))
-
-export default useAppStore
+export const useAuthStore = create<AuthState>((set) => ({
+  session: null,
+  setSession: (session: AuthSession | null) => set({ session }),
+}));
 ```
