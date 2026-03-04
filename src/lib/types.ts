@@ -1,20 +1,21 @@
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
-export type PriorityLevel = 'HIGH' | 'MEDIUM' | 'LOW'
-
-export interface Task {
+export type Task = {
   id?: string
   title: string
   description?: string
-  status: TaskStatus
-  priority: PriorityLevel
-  dueDate?: Date
-  createdAt?: Date
-  updatedAt?: Date
+  status: 'TODO' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+  priority: 'HIGH' | 'MEDIUM' | 'LOW'
+  dueDate?: string
+  userId: string
 }
 
-export interface User {
+export type Profile = {
   id?: string
-  email: string
-  name?: string
+  userId: string
+  fullName?: string
+  avatarUrl?: string
+}
+
+export type AuthSession = {
+  session: any | null
 }
 ```
